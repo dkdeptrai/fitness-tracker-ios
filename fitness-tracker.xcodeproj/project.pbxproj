@@ -24,25 +24,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D030BFF22CCCEC710001EDB0 /* fitness-trackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "fitness-trackerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D030BFF32CCCEC710001EDB0 /* fitness-trackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "fitness-trackerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BF14B22CC94B270012F539 /* fitness-tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "fitness-tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D0BF14B32CC94B270012F539 /* fitness-trackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "fitness-trackerTests.xctest"; path = "/Users/khoadz/dev/src/swift/fitness-tracker/build/Debug-iphoneos/fitness-tracker.app/PlugIns/fitness-trackerTests.xctest"; sourceTree = "<absolute>"; };
-		D0BF14B42CC94B270012F539 /* fitness-trackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "fitness-trackerUITests.xctest"; path = "/Users/khoadz/dev/src/swift/fitness-tracker/build/Debug-iphoneos/fitness-trackerUITests-Runner.app/PlugIns/fitness-trackerUITests.xctest"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D0BF14B12CC949CB0012F539 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		D07368122CF4AD1F00833332 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Network/APIServiceTest.swift,
-				TestData/ExerciseTestData.swift,
+				"fitness-trackerTests/Network/APIServiceTest.swift",
+				"fitness-trackerTests/TestData/ExerciseTestData.swift",
 			);
 			target = D050E6AD2CC41AD3007C2788 /* fitness-tracker */;
+		};
+		D07368132CF4AD1F00833332 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"fitness-trackerTests/Mocks/MockAPIService.swift",
+				"fitness-trackerTests/Network/APIServiceTest.swift",
+				"fitness-trackerTests/TestData/ExerciseTestData.swift",
+			);
+			target = D050E6BD2CC41AD5007C2788 /* fitness-trackerTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		D09FC8592CC942F000EC449F /* fitness-tracker */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "fitness-tracker"; sourceTree = "<group>"; };
-		D09FC86C2CC9431F00EC449F /* fitness-trackerTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (D0BF14B12CC949CB0012F539 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "fitness-trackerTests"; sourceTree = "<group>"; };
+		D09FC8592CC942F000EC449F /* fitness-tracker */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (D07368122CF4AD1F00833332 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, D07368132CF4AD1F00833332 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "fitness-tracker"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +82,9 @@
 			isa = PBXGroup;
 			children = (
 				D09FC8592CC942F000EC449F /* fitness-tracker */,
-				D09FC86C2CC9431F00EC449F /* fitness-trackerTests */,
 				D0BF14B22CC94B270012F539 /* fitness-tracker.app */,
+				D030BFF22CCCEC710001EDB0 /* fitness-trackerTests.xctest */,
+				D030BFF32CCCEC710001EDB0 /* fitness-trackerUITests.xctest */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -97,7 +106,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D09FC8592CC942F000EC449F /* fitness-tracker */,
-				D09FC86C2CC9431F00EC449F /* fitness-trackerTests */,
 			);
 			name = "fitness-tracker";
 			packageProductDependencies = (
@@ -119,14 +127,11 @@
 			dependencies = (
 				D050E6C02CC41AD5007C2788 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				D09FC86C2CC9431F00EC449F /* fitness-trackerTests */,
-			);
 			name = "fitness-trackerTests";
 			packageProductDependencies = (
 			);
 			productName = "fitness-trackerTests";
-			productReference = D0BF14B32CC94B270012F539 /* fitness-trackerTests.xctest */;
+			productReference = D030BFF22CCCEC710001EDB0 /* fitness-trackerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		D050E6C72CC41AD5007C2788 /* fitness-trackerUITests */ = {
@@ -146,7 +151,7 @@
 			packageProductDependencies = (
 			);
 			productName = "fitness-trackerUITests";
-			productReference = D0BF14B42CC94B270012F539 /* fitness-trackerUITests.xctest */;
+			productReference = D030BFF32CCCEC710001EDB0 /* fitness-trackerUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */

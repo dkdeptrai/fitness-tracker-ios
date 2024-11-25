@@ -8,11 +8,13 @@ protocol APIServiceProtocol {
 }
 
 class APIService: APIServiceProtocol {
+    static let shared = APIService()
+    
     private let baseUrl: String
     private let session: URLSession
     private var authToken: String?
     
-    init(baseUrl: String = ProcessInfo.processInfo.environment["API_BASE_URL"] ?? "", session: URLSession = .shared, authToken: String? = nil) {
+    private init(baseUrl: String = ProcessInfo.processInfo.environment["API_BASE_URL"] ?? "", session: URLSession = .shared, authToken: String? = nil) {
         self.baseUrl = baseUrl
         self.session = session
         self.authToken = authToken
