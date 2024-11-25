@@ -40,7 +40,7 @@ struct WorkoutView: View {
         }
 
         // Summary  
-        WorkoutSummaryView()
+        WorkoutSummaryComponent()
       }
     }
     .padding()

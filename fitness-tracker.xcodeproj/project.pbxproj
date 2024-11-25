@@ -41,7 +41,6 @@
 		D07368132CF4AD1F00833332 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"fitness-trackerTests/Mocks/MockAPIService.swift",
 				"fitness-trackerTests/Network/APIServiceTest.swift",
 				"fitness-trackerTests/TestData/ExerciseTestData.swift",
 			);

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WorkoutSummaryView: View {
+struct WorkoutSummaryComponent: View {
   var body: some View {
     HStack(alignment: .center) {
       Image(systemName: "flame")
@@ -40,5 +40,5 @@ struct WorkoutSummaryView: View {
 }
 
 #Preview {
-  WorkoutSummaryView()
+  WorkoutSummaryComponent()
 }
