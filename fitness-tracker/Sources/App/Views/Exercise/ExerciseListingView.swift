@@ -9,26 +9,30 @@ import SwiftUI
 
 struct ExerciseListingView: View {
   @StateObject private var viewModel = ExerciseListingViewModel()
+
   var body: some View {
     NavigationStack {
       ScrollView {
         LazyVStack {
-          ForEach(0...10, id: \.self) { listing in
-            Rectangle()
-              .frame(height: 100)
-              .cornerRadius(10)
+          ForEach(viewModel.exercises) { exercise in
+            NavigationLink(destination: ExerciseRowView(exercise: exercise)) {
+              ExerciseRowView(exercise: exercise)
+            }
           }
         }
       }
       .padding(.horizontal)
       .toolbar {
         ToolbarItem(placement: .principal) {
-          HStack{
+          HStack {
             TextField("Search for exercises", text: $viewModel.searchText)
               .textFieldStyle(RoundedBorderTextFieldStyle())
-            
+
             Button {
-              viewModel.fetchSearchResults()
+              Task {
+                await viewModel.fetchSearchResults()
+                print(viewModel.exercises)
+              }
             } label: {
               Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
@@ -37,6 +41,18 @@ struct ExerciseListingView: View {
         }
       }
     }
+    .overlay(
+      Group {
+        if viewModel.isLoading {
+          ProgressView("Loading...")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.black.opacity(0.5))
+        }
+      }
+    )
+    .overlay(
+      ErrorDialog(message: $viewModel.errorMessage)
+    )
   }
 }
 

@@ -58,6 +58,7 @@ class ApiDataService<T: Codable>: DataService {
         throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
       }
     } catch {
+      let errorMessage = ErrorHandler.handleError(error)
       print("Error fetching data: \(error)")
       throw error
     }
@@ -84,6 +85,7 @@ class ApiDataService<T: Codable>: DataService {
         throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
       }
     } catch {
+      let errorMessage = ErrorHandler.handleError(error)
       print("Error fetching data: \(error)")
       throw error
     }
@@ -111,6 +113,7 @@ class ApiDataService<T: Codable>: DataService {
         throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
       }
     } catch {
+      let errorMessage = ErrorHandler.handleError(error)
       print("Error posting data: \(error)")
       throw error
     }
@@ -135,6 +138,7 @@ class ApiDataService<T: Codable>: DataService {
         throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
       }
     } catch {
+      let errorMessage = ErrorHandler.handleError(error)
       print("Error putting data: \(error)")
       throw error
     }
@@ -148,13 +152,19 @@ class ApiDataService<T: Codable>: DataService {
 
     var request = URLRequest(url: url)
     request.httpMethod = "DELETE"
+    do {
 
-    let (_, response) = try await session.data(for: request)
+      let (_, response) = try await session.data(for: request)
 
-    if let httpResponse = response as? HTTPURLResponse {
-      return httpResponse.statusCode == 204
-    } else {
-      throw URLError(.badServerResponse)
+      if let httpResponse = response as? HTTPURLResponse {
+        return httpResponse.statusCode == 204
+      } else {
+        throw URLError(.badServerResponse)
+      }
+    } catch {
+      let errorMessage = ErrorHandler.handleError(error)
+      print("Error deleting data: \(error)")
+      throw error
     }
   }
 }

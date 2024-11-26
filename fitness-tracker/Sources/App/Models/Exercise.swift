@@ -11,12 +11,12 @@ struct Exercise: Codable, Identifiable {
     let description: String?
     let createdByUser: Bool
     let muscleGroups: [MuscleGroup]
-    let exerciseCategories: [ExerciseCategory]
+    let exerciseCategory: ExerciseCategory
     
     enum CodingKeys: String, CodingKey {
         case id, name, description
         case createdByUser = "created_by_user"
         case muscleGroups = "muscle_groups"
-        case exerciseCategories = "exercise_categories"
+        case exerciseCategory = "exercise_category"
     }
 }
