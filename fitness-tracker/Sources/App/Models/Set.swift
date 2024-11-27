@@ -5,7 +5,7 @@
 //  Created by Đình Khoa Nguyễn on 22/10/24.
 //
 
-struct WorkoutSet: Codable, Identifiable {
+struct Set: Codable, Identifiable {
     let id: Int
     let exerciseId: Int
     var reps: Int

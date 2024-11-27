@@ -9,6 +9,7 @@ import Foundation
 
 class BaseViewModel: ObservableObject {
   @Published var errorMessage: String?
+  
 
   func handleError(_ error: Error) {
     errorMessage = ErrorHandler.handleError(error)
