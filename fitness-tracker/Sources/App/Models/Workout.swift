@@ -12,7 +12,7 @@ struct Workout: Codable, Identifiable {
     var endTime: String?
     var duration: Int?
     var calories: Int?
-    var workoutSets: [WorkoutSet]
+    var workoutSets: [Set]
     
     enum CodingKeys: String, CodingKey {
         case id, name
