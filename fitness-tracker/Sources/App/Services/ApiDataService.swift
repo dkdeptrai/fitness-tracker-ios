@@ -93,15 +93,11 @@ class ApiDataService<T: Codable>: DataService {
 
   // MARK: - Post Data
   func postData(to endpoint: String, item: T) async throws -> Bool {
-    guard let url = URL(string: "\(baseUrl)/\(endpoint)") else {
-      throw ApiDataServiceError.invalidURL
-    }
-
     let request = try createRequest(
       for: endpoint, httpMethod: "POST", item: item)
 
     do {
-      let (data, response) = try await session.data(for: request)
+      let (_, response) = try await session.data(for: request)
 
       guard let httpResponse = response as? HTTPURLResponse else {
         throw ApiDataServiceError.serverError
@@ -132,6 +128,7 @@ class ApiDataService<T: Codable>: DataService {
       guard let httpResponse = response as? HTTPURLResponse else {
         throw ApiDataServiceError.serverError
       }
+
       if httpResponse.statusCode == 200 {
         return true
       } else {
@@ -146,20 +143,20 @@ class ApiDataService<T: Codable>: DataService {
 
   // MARK: - Delete Data
   func deleteData(from endpoint: String, byId id: Int) async throws -> Bool {
-    guard let url = URL(string: "\(baseUrl)/\(endpoint)/\(id)") else {
-      throw URLError(.badURL)
-    }
+    let request = try createRequest(
+      for: "\(endpoint)/\(id)", httpMethod: "DELETE")
 
-    var request = URLRequest(url: url)
-    request.httpMethod = "DELETE"
     do {
-
       let (_, response) = try await session.data(for: request)
 
-      if let httpResponse = response as? HTTPURLResponse {
-        return httpResponse.statusCode == 204
+      guard let httpResponse = response as? HTTPURLResponse else {
+        throw ApiDataServiceError.serverError
+      }
+
+      if httpResponse.statusCode == 204 {
+        return true
       } else {
-        throw URLError(.badServerResponse)
+        throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
       }
     } catch {
       let errorMessage = ErrorHandler.handleError(error)
