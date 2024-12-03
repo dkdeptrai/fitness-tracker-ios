@@ -11,6 +11,7 @@ enum ApiDataServiceError: Error {
   case invalidURL
   case serverError
   case decodingError
+  case validationError(String)
   case unexpectedStatusCode(Int)
 }
 
@@ -55,21 +56,69 @@ class ApiDataService<T: Codable>: DataService {
         let decodedData = try JSONDecoder().decode([T].self, from: data)
         return decodedData
       } else {
-        throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
+        try handleHTTPError(httpResponse, data: data)
+        return []
       }
     } catch {
-      let errorMessage = ErrorHandler.handleError(error)
       print("Error fetching data: \(error)")
       throw error
     }
   }
 
   func fetchData(byId id: Int, for endpoint: String) async throws -> T? {
-    guard let url = URL(string: "\(baseUrl)/\(endpoint)/\(id)") else {
-      throw URLError(.badURL)
-    }
-
     let request = try createRequest(for: "\(endpoint)/\(id)", httpMethod: "GET")
+    
+    do {
+      let (data, response) = try await session.data(for: request)
+      guard let httpResponse = response as? HTTPURLResponse else {
+        throw ApiDataServiceError.serverError
+      }
+      
+      if httpResponse.statusCode == 200 {
+        let decodedData = try JSONDecoder().decode(T.self, from: data)
+        return decodedData
+      } else {
+        try handleHTTPError(httpResponse, data: data)
+        return nil
+      }
+    } catch {
+      print("Error fetching data: \(error)")
+      throw error
+    }
+  }
+
+
+  // MARK: - Post Data
+  func postData(to endpoint: String, item: T) async throws -> T? {
+    let request = try createRequest(
+      for: endpoint, httpMethod: "POST", item: item)
+
+    do {
+      let (data, response) = try await session.data(for: request)
+
+      guard let httpResponse = response as? HTTPURLResponse else {
+        throw ApiDataServiceError.serverError
+      }
+
+      if httpResponse.statusCode == 201 {
+        let decodedData = try JSONDecoder().decode(T.self, from: data)
+        return decodedData
+      } else {
+        try handleHTTPError(httpResponse, data: data)
+        return nil
+      }
+    } catch {
+      print("Error posting data: \(error)")
+      throw error
+    }
+  }
+
+  // MARK: - Put Data
+  func putData(to endpoint: String, byId id: Int, item: T) async throws
+    -> T?
+  {
+    let request = try createRequest(
+      for: "\(endpoint)/\(id)", httpMethod: "PUT", item: item)
 
     do {
       let (data, response) = try await session.data(for: request)
@@ -82,60 +131,10 @@ class ApiDataService<T: Codable>: DataService {
         let decodedData = try JSONDecoder().decode(T.self, from: data)
         return decodedData
       } else {
-        throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
+        try handleHTTPError(httpResponse, data: data)
+        return nil
       }
     } catch {
-      let errorMessage = ErrorHandler.handleError(error)
-      print("Error fetching data: \(error)")
-      throw error
-    }
-  }
-
-  // MARK: - Post Data
-  func postData(to endpoint: String, item: T) async throws -> Bool {
-    let request = try createRequest(
-      for: endpoint, httpMethod: "POST", item: item)
-
-    do {
-      let (_, response) = try await session.data(for: request)
-
-      guard let httpResponse = response as? HTTPURLResponse else {
-        throw ApiDataServiceError.serverError
-      }
-
-      if httpResponse.statusCode == 201 {
-        return true
-      } else {
-        throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
-      }
-    } catch {
-      let errorMessage = ErrorHandler.handleError(error)
-      print("Error posting data: \(error)")
-      throw error
-    }
-  }
-
-  // MARK: - Put Data
-  func putData(to endpoint: String, byId id: Int, item: T) async throws
-    -> Bool
-  {
-    let request = try createRequest(
-      for: "\(endpoint)/\(id)", httpMethod: "PUT", item: item)
-
-    do {
-      let (_, response) = try await session.data(for: request)
-
-      guard let httpResponse = response as? HTTPURLResponse else {
-        throw ApiDataServiceError.serverError
-      }
-
-      if httpResponse.statusCode == 200 {
-        return true
-      } else {
-        throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
-      }
-    } catch {
-      let errorMessage = ErrorHandler.handleError(error)
       print("Error putting data: \(error)")
       throw error
     }
@@ -159,9 +158,25 @@ class ApiDataService<T: Codable>: DataService {
         throw ApiDataServiceError.unexpectedStatusCode(httpResponse.statusCode)
       }
     } catch {
-      let errorMessage = ErrorHandler.handleError(error)
       print("Error deleting data: \(error)")
       throw error
     }
   }
+
+  private func handleHTTPError(_ response: HTTPURLResponse, data: Data) throws {
+    switch response.statusCode {
+    case 422:
+      let errorResponse = try JSONDecoder().decode(
+        [String: [String]].self, from: data)
+      if let errorMessages = errorResponse["errors"] {
+        let errorMessage = errorMessages.joined(separator: ", ")
+        throw ApiDataServiceError.validationError(errorMessage)
+      } else {
+        throw ApiDataServiceError.unexpectedStatusCode(response.statusCode)
+      }
+    default:
+      throw ApiDataServiceError.unexpectedStatusCode(response.statusCode)
+    }
+  }
+
 }

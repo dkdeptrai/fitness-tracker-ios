@@ -18,6 +18,8 @@ struct ErrorHandler {
       return "Failed to process data. Please try again."
     case ApiDataServiceError.unexpectedStatusCode(let code):
       return "Unexpected response from the server: \(code)."
+    case ApiDataServiceError.validationError(let message):
+      return message
     case URLError.badURL:
       return "The URL is malformed. Please check your request."
     case URLError.badServerResponse:
